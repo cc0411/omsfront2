@@ -30,11 +30,32 @@
                                     <el-option label="虚拟机" value="virtual"></el-option>
                                     <el-option label="云主机" value="instance"></el-option>
                                 </el-select>
-
                                 <div class="search">
                                     <el-input v-model="searchdata" placeholder="搜索关键词" class="handle-input mr10"></el-input>
                                     <el-button type="primary" icon="search" @click="searchClick">搜索</el-button>
                                 </div>
+                            </div>
+                            <div class="download">
+                                <el-form :inline="true" size="mini">
+                                    <el-form-item :label="`已选数据下载 [ ${multipleSelection.length} ]`">
+                                        <el-button-group>
+                                            <el-button
+                                                    type="primary"
+                                                    size="mini"
+                                                    :disabled="multipleSelection.length === 0"
+                                                    @click="handleDownloadXlsx(multipleSelection)">
+                                                xlsx
+                                            </el-button>
+                                            <el-button
+                                                    type="primary"
+                                                    size="mini"
+                                                    :disabled="multipleSelection.length === 0"
+                                                    @click="handleDownloadCsv(multipleSelection)">
+                                                csv
+                                            </el-button>
+                                        </el-button-group>
+                                    </el-form-item>
+                                </el-form>
                             </div>
                             <el-table
                                     ref="multipleTable"
@@ -231,6 +252,22 @@
                     'online': { 'status': '上线', 'type': 'primary' },
                     'offline': { 'status': '下线', 'type': 'info' },
                 },
+                downloadColumns: [
+                    { label:'主机名', prop:'hostname'},
+                    { label:'外网地址', prop:'wip'},
+                    { label:'内网地址', prop:'nip'},
+                    { label:'状态', prop:'status'},
+                    { label:'主机类型', prop:'server_type'},
+                    { label:'SN', prop:'sn'},
+                    { label:'云主机ID', prop:'instance_id'},
+                    { label:'机房', prop:'idc'},
+                    { label:'角色', prop:'role'},
+                    { label:'业务线', prop:'business_unit'},
+                    { label:'CPU', prop:'cpu_info'},
+                    { label:'内存', prop:'memory'},
+                    { label:'硬盘', prop:'disk'},
+                    { label:'系统', prop:'os:'}
+                ]
             }
         },
         methods:{
@@ -391,7 +428,36 @@
                 this.listQuery.business_unit = data.id;
                 // console.log(data.id)
                 this.getHostData()
+            },
+            downloadDataTranslate (data) {
+                return data.map(row => ({
+                    ...row,
+                    type: row.type ? '禁用' : '正常',
+                    used: row.used ? '已使用' : '未使用'
+                }))
+            },
+            handleDownloadXlsx(data){
+                this.$export.excel({
+                    title:'主机列表',
+                    columns:this.downloadColumns,
+                    data:this.downloadDataTranslate(data)
+                }).then(()=>{
+                    this.$message('导出xlsx成功'
+                    )
+                })
+            },
+
+            handleDownloadCsv(data) {
+                this.$export.csv({
+                    title: '主机列表',
+                    columns: this.downloadColumns,
+                    data: this.downloadDataTranslate(data)
+                })
+                    .then(() => {
+                        this.$message('导出CSV成功')
+                    })
             }
+
         }
     }
 </script>
@@ -406,9 +472,13 @@
     .search {
         float: right;
     }
-    .pagination{
+    .pagination {
         float: right;
         margin-top: 20px;
+    }
+    .download {
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
     .treeheader {
         padding-bottom: 30px;

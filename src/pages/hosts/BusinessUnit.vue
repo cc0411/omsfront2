@@ -1,9 +1,9 @@
 <template>
     <d2-container>
         <div class="d2-mt d2-mr">
-            <el-card  class="d2-card d2-mb">
+            <el-card class="d2-card d2-mb">
                 <div class="handle-box">
-                    <el-button type="success" round @click="handleAdd" >添加业务线</el-button>
+                    <el-button type="success" round @click="handleAdd">添加业务线</el-button>
                     <el-table
                             :data='TableData'
                             v-if="TableData.length>0"
@@ -13,7 +13,8 @@
                         <el-table-column prop='businessunit_type' label='类目' width="150" aligin="center">
                             <template slot-scope="scope">
                                 <div slot="reference" class="name-wrapper" style="text-align: left">
-                                    <el-tag style="color: #000" :color="BusinessUnit_TYPE[scope.row.businessunit_type].color">
+                                    <el-tag style="color: #000"
+                                            :color="BusinessUnit_TYPE[scope.row.businessunit_type].color">
                                         {{BusinessUnit_TYPE[scope.row.businessunit_type].type}}
                                     </el-tag>
                                 </div>
@@ -35,10 +36,10 @@
                                 label="二级业务线名"
                                 width="200">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.parent_level.length>0"  v-for="item in  scope.row.parent_level">{{item.name}}</span>
+                                <span v-if="scope.row.parent_level.length>0" v-for="item in  scope.row.parent_level">{{item.name}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop='ctime' label='创建时间'  width="200">
+                        <el-table-column prop='ctime' label='创建时间' width="200">
                             <template slot-scope="scope">
                                 <div slot="reference" class="name-wrapper" style="text-align: left; color: rgb(0,0,0)">
                                     <span>{{scope.row.ctime | parseDate}}</span>
@@ -50,10 +51,12 @@
                                 label="业务线描述"
                                 width="300">
                         </el-table-column>
-                        <el-table-column label="操作"  width="180" aligin="center">
+                        <el-table-column label="操作" width="180" aligin="center">
                             <template slot-scope="scope">
-                                <el-button type="primary"  @click="handleEdit(scope.row)"  icon="el-icon-edit" circle></el-button>
-                                <el-button type="danger"  @click="handleDelete(scope.row)"  icon="el-icon-delete" circle></el-button>
+                                <el-button type="primary" @click="handleEdit(scope.row)" icon="el-icon-edit"
+                                           circle></el-button>
+                                <el-button type="danger" @click="handleDelete(scope.row)" icon="el-icon-delete"
+                                           circle></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -65,49 +68,51 @@
                                     @updatebusinessunits="getBusinessUnitsData">
 
                 </BusinessUnitdialog>
-            </el-card></div>
+            </el-card>
+        </div>
     </d2-container>
 
 </template>
 
 <script>
     import BusinessUnitdialog from './BusinessUnitdialog'
-    import {getBusinessUnits,deleteBusinessUnit}  from  '@/api/sys/hosts'
+    import {getBusinessUnits, deleteBusinessUnit} from '@/api/sys/hosts'
+
     export default {
         name: 'BusinessUnit',
-        data(){
+        data() {
             return {
                 BusinessUnit_TYPE: {
-                    1: { 'type': '一级业务线', 'color': '#c0dbff' },
-                    2: { 'type': '二级业务线', 'color': '#19ddff' },
-                    3: { 'type': '三级业务线', 'color': '#f06292' },
+                    1: {'type': '一级业务线', 'color': '#c0dbff'},
+                    2: {'type': '二级业务线', 'color': '#19ddff'},
+                    3: {'type': '三级业务线', 'color': '#f06292'},
                 },
-                TableData:[],
-                dialog:{
-                    show:false,
-                    title:'',
-                    option:'edit',
+                TableData: [],
+                dialog: {
+                    show: false,
+                    title: '',
+                    option: 'edit',
                 },
-                rowdata:{},
+                rowdata: {},
                 FormData: {
                     parent_unit: '',
-                    businessunit_type:'',
+                    businessunit_type: '',
                     name: '',
                     desc: '',
                 },
             }
         },
-        components:{
+        components: {
             BusinessUnitdialog
         },
-        created(){
+        created() {
             this.getBusinessUnitsData()
         },
-        methods:{
+        methods: {
             //  获取机房信息
-            getBusinessUnitsData(){
+            getBusinessUnitsData() {
                 getBusinessUnits()
-                    .then(res=>{
+                    .then(res => {
                         console.log(res)
                         this.TableData = res;
                     }).catch(function (error) {
@@ -115,9 +120,9 @@
                 })
             },
             //删除业务线
-            handleDelete(row){
-                this.$confirm("确定要删除吗？该业务线下的所有主机将会被删除").then(()=>{
-                    deleteBusinessUnit(row.id).then((res)=>{
+            handleDelete(row) {
+                this.$confirm("确定要删除吗？该业务线下的所有主机将会被删除").then(() => {
+                    deleteBusinessUnit(row.id).then((res) => {
                         this.$message({
                             message: '恭喜你，删除成功',
                             type: 'success'
@@ -130,26 +135,26 @@
                 })
             },
             //编辑业务线
-            handleEdit(row){
-                this.dialog={
-                    title:"编辑业务线",
-                    show:true,
-                    option:'edit',
+            handleEdit(row) {
+                this.dialog = {
+                    title: "编辑业务线",
+                    show: true,
+                    option: 'edit',
                 },
-                    this.rowdata=row;
-                this.FormData ={
-                    name:row.name,
-                    parent_unit:row.parent_unit,
-                    desc:row.desc,
-                    businessunit_type:row.businessunit_type
+                    this.rowdata = row;
+                this.FormData = {
+                    name: row.name,
+                    parent_unit: row.parent_unit,
+                    desc: row.desc,
+                    businessunit_type: row.businessunit_type
                 }
             },
             //添加业务线
-            handleAdd(){
-                this.dialog={
-                    title:"添加业务线",
-                    show:true,
-                    option:'add',
+            handleAdd() {
+                this.dialog = {
+                    title: "添加业务线",
+                    show: true,
+                    option: 'add',
                 };
             }
         },

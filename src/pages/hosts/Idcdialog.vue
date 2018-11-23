@@ -5,10 +5,10 @@
                 :visible.sync="dialog.show"
                 :close-on-click-modal="false"
                 :close-on-press-escape="false"
-                :modal-append-to-body ="false"
+                :modal-append-to-body="false"
         >
             <div class="form">
-                <el-form ref="idcform" :model="FormData"  :rules="rules" label-width="80px">
+                <el-form ref="idcform" :model="FormData" :rules="rules" label-width="80px">
                     <el-form-item label="机房名" prop="name">
                         <el-input v-model="FormData.name"></el-input>
                     </el-form-item>
@@ -28,20 +28,21 @@
 </template>
 
 <script>
-    import  {addIdc,updateIdc}  from '@/api/sys/hosts'
+    import {addIdc, updateIdc} from '@/api/sys/hosts'
+
     export default {
         name: 'Idcdialog',
-        props:{
-            dialog:Object,
-            FormData:Object,
-            rowdata:Object,
+        props: {
+            dialog: Object,
+            FormData: Object,
+            rowdata: Object,
         },
-        data(){
+        data() {
             return {
-                error:false,
-                rules:{
+                error: false,
+                rules: {
                     name: [
-                        { required: true, message: '机房名不可以为空', trigger: 'blur' }
+                        {required: true, message: '机房名不可以为空', trigger: 'blur'}
                     ],
                 }
             }
@@ -51,22 +52,22 @@
                 var that = this
                 this.$refs[Formname].validate((valid) => {
                     if (valid) {
-                        const option = this.dialog.option=="add"?addIdc(this.FormData):updateIdc(this.rowdata.id,this.FormData);
-                        option.then(res=>{
+                        const option = this.dialog.option == "add" ? addIdc(this.FormData) : updateIdc(this.rowdata.id, this.FormData);
+                        option.then(res => {
                             this.$message.success('添加更新成功');
-                            this.dialog.show=false;
+                            this.dialog.show = false;
                             this.$emit('updateidcs')
                         }).catch(function (error) {
                             const err = error.response.data;
-                            if("non_field_errors" in err){
-                                that.error =err.non_field_errors[0];
+                            if ("non_field_errors" in err) {
+                                that.error = err.non_field_errors[0];
                             }
-                            if("name" in err){
-                                that.error=err.name[0];
+                            if ("name" in err) {
+                                that.error = err.name[0];
                             }
                         })
                     }
-                    else{
+                    else {
                         this.$message.error('失败了！');
                     }
                 })
@@ -76,7 +77,7 @@
 </script>
 
 <style scoped>
-    .error-text{
-        color:#fa8341;
+    .error-text {
+        color: #fa8341;
     }
 </style>

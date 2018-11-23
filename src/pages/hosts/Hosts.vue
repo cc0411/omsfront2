@@ -2,7 +2,7 @@
 
     <d2-container>
         <div class="d2-mt d2-mr">
-            <el-card  class="d2-card d2-mb">
+            <el-card class="d2-card d2-mb">
                 <el-row>
                     <el-col :span="4">
                         <div class="treeheader">
@@ -17,23 +17,29 @@
                     <el-col :span="20">
                         <div class="handle-box">
                             <div class="handle-head">
-                                <el-button size="mini" type="danger"  round @click="delAll" :disabled="this.multipleSelection.length === 0||this.disabled">批量删除</el-button>
-                                <el-button size="mini" type="success" round  @click="handleAdd">添加主机</el-button>
-                                <el-select  size="mini"  v-model="listQuery.status"   @change="changeStatus" placeholder="请选择" class="handle-select mr10">
+                                <el-button size="mini" type="danger" round @click="delAll"
+                                           :disabled="this.multipleSelection.length === 0||this.disabled">批量删除
+                                </el-button>
+                                <el-button size="mini" type="success" round @click="handleAdd">添加主机</el-button>
+                                <el-select size="mini" v-model="listQuery.status" @change="changeStatus"
+                                           placeholder="请选择" class="handle-select mr10">
                                     <el-option label="上线" value="online">
                                     </el-option>
                                     <el-option label="下线" value="offline">
                                     </el-option>
                                 </el-select>
-                                <el-select  size="mini"   v-model="listQuery.server_type"   @change="changeServerType" placeholder="请选择" class="handle-select mr10">
-                                    <el-option label="物理机"  value="physical"></el-option>
+                                <el-select size="mini" v-model="listQuery.server_type" @change="changeServerType"
+                                           placeholder="请选择" class="handle-select mr10">
+                                    <el-option label="物理机" value="physical"></el-option>
                                     <el-option label="虚拟机" value="virtual"></el-option>
                                     <el-option label="云主机" value="instance"></el-option>
                                 </el-select>
                                 <div class="search">
-                                    <el-input v-model="searchdata" placeholder="搜索关键词"  size="mini"  class="handle-input mr10"></el-input>
-                                    <el-button size="mini" round  type="primary" icon="search" @click="searchClick">搜索</el-button>
-                                    <el-button size="mini" round   icon="refresh" @click="refreshClick">重置</el-button>
+                                    <el-input v-model="searchdata" placeholder="搜索关键词" size="mini"
+                                              class="handle-input mr10"></el-input>
+                                    <el-button size="mini" round type="primary" icon="search" @click="searchClick">搜索
+                                    </el-button>
+                                    <el-button size="mini" round icon="refresh" @click="refreshClick">重置</el-button>
                                 </div>
                             </div>
                             <div class="download">
@@ -69,8 +75,8 @@
                                     @sort-change="sortChange"
                             >
                                 <el-table-column type="expand">
-                                    <template  slot-scope="props">
-                                        <el-form  label-posotion="left"  inline  class="demo-table-expand">
+                                    <template slot-scope="props">
+                                        <el-form label-posotion="left" inline class="demo-table-expand">
                                             <el-form-item label="CPU">
                                                 <span>{{props.row.cpu_info}}</span>
                                             </el-form-item>
@@ -125,10 +131,11 @@
                                         label="机房"
                                         width="120">
                                 </el-table-column>
-                                <el-table-column prop='server_type' label='类型'  width="100" aligin="left">
+                                <el-table-column prop='server_type' label='类型' width="100" aligin="left">
                                     <template slot-scope="scope">
                                         <div slot="reference" class="name-wrapper" style="text-align: left">
-                                            <el-tag style="color: #000" :color="ASSET_TYPE[scope.row.server_type].color">
+                                            <el-tag style="color: #000"
+                                                    :color="ASSET_TYPE[scope.row.server_type].color">
                                                 {{ASSET_TYPE[scope.row.server_type].type}}
                                             </el-tag>
                                         </div>
@@ -148,17 +155,20 @@
                                         </div>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop='ctime' label='创建时间'  width="150"  sortable="custom">
+                                <el-table-column prop='ctime' label='创建时间' width="150" sortable="custom">
                                     <template slot-scope="scope">
-                                        <div slot="reference" class="name-wrapper" style="text-align: left; color: rgb(0,0,0)">
+                                        <div slot="reference" class="name-wrapper"
+                                             style="text-align: left; color: rgb(0,0,0)">
                                             <span>{{scope.row.ctime | parseDate}}</span>
                                         </div>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="操作"  width="200" aligin="center">
+                                <el-table-column label="操作" width="200" aligin="center">
                                     <template slot-scope="scope">
-                                        <el-button type="primary"  @click="handleEdit(scope.row)"   icon="el-icon-edit" circle></el-button>
-                                        <el-button type="danger"  @click="handleDelete(scope.row)"  icon="el-icon-delete" circle></el-button>
+                                        <el-button type="primary" @click="handleEdit(scope.row)" icon="el-icon-edit"
+                                                   circle></el-button>
+                                        <el-button type="danger" @click="handleDelete(scope.row)" icon="el-icon-delete"
+                                                   circle></el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -188,102 +198,103 @@
 </template>
 
 <script>
-    import {getBusinessUnitTree}  from  '@/api/sys/hosts'
+    import {getBusinessUnitTree} from '@/api/sys/hosts'
     import Hostdialog from './Hostdialog'
-    import { getHosts ,delHost} from  '@/api/sys/hosts'
+    import {getHosts, delHost} from '@/api/sys/hosts'
+
     export default {
         name: "Hosts",
         created() {
             this.getHostData();
             this.getTreeData()
         },
-        components:{
+        components: {
             Hostdialog
         },
-        data(){
-            return{
-                treedata:[],
+        data() {
+            return {
+                treedata: [],
                 defaultProps: {
                     children: 'parent_level',
                     label: 'name'
                 },
-                FormData:{
-                    hostname:'',
-                    wip:'',
-                    nip:'',
-                    status:'',
-                    server_type:'',
-                    sn:'',
-                    instance_id:'',
-                    idc:'',
-                    role:'',
-                    business_unit:'',
-                    desc:'',
-                    cpu_info:'',
-                    memory:0,
-                    disk:0,
-                    os:'',
+                FormData: {
+                    hostname: '',
+                    wip: '',
+                    nip: '',
+                    status: '',
+                    server_type: '',
+                    sn: '',
+                    instance_id: '',
+                    idc: '',
+                    role: '',
+                    business_unit: '',
+                    desc: '',
+                    cpu_info: '',
+                    memory: 0,
+                    disk: 0,
+                    os: '',
                 },
-                dialog:{
-                    show:false,
-                    title:'',
-                    option:'edit',
+                dialog: {
+                    show: false,
+                    title: '',
+                    option: 'edit',
                 },
-                rowdata:{},
-                searchdata:'',
-                disabled:false,
+                rowdata: {},
+                searchdata: '',
+                disabled: false,
                 tabletotal: 0,
                 HostsData: [],
                 multipleSelection: [],
-                listQuery:{
-                    page:1,
-                    page_size :10,
-                    search:'',
-                    status:'',
-                    server_type:'',
-                    ordering:'',
-                    business_unit:'',
+                listQuery: {
+                    page: 1,
+                    page_size: 10,
+                    search: '',
+                    status: '',
+                    server_type: '',
+                    ordering: '',
+                    business_unit: '',
                 },
                 ASSET_TYPE: {
-                    'physical': { 'type': '物理机', 'color': '#c0dbff' },
-                    'virtual': { 'type': '虚拟机', 'color': '#19ddff' },
-                    'instance': { 'type': '云主机', 'color': '#f06292' },
+                    'physical': {'type': '物理机', 'color': '#c0dbff'},
+                    'virtual': {'type': '虚拟机', 'color': '#19ddff'},
+                    'instance': {'type': '云主机', 'color': '#f06292'},
                 },
                 ASSET_STATUS: {
-                    'online': { 'status': '上线', 'type': 'primary' },
-                    'offline': { 'status': '下线', 'type': 'info' },
+                    'online': {'status': '上线', 'type': 'primary'},
+                    'offline': {'status': '下线', 'type': 'info'},
                 },
                 downloadColumns: [
-                    { label:'主机名', prop:'hostname'},
-                    { label:'外网地址', prop:'wip'},
-                    { label:'内网地址', prop:'nip'},
-                    { label:'状态', prop:'status'},
-                    { label:'主机类型', prop:'server_type'},
-                    { label:'SN', prop:'sn'},
-                    { label:'云主机ID', prop:'instance_id'},
-                    { label:'机房', prop:'idc'},
-                    { label:'角色', prop:'role'},
-                    { label:'业务线', prop:'business_unit'},
-                    { label:'CPU', prop:'cpu_info'},
-                    { label:'内存', prop:'memory'},
-                    { label:'硬盘', prop:'disk'},
-                    { label:'系统', prop:'os:'}
+                    {label: '主机名', prop: 'hostname'},
+                    {label: '外网地址', prop: 'wip'},
+                    {label: '内网地址', prop: 'nip'},
+                    {label: '状态', prop: 'status'},
+                    {label: '主机类型', prop: 'server_type'},
+                    {label: 'SN', prop: 'sn'},
+                    {label: '云主机ID', prop: 'instance_id'},
+                    {label: '机房', prop: 'idc'},
+                    {label: '角色', prop: 'role'},
+                    {label: '业务线', prop: 'business_unit'},
+                    {label: 'CPU', prop: 'cpu_info'},
+                    {label: '内存', prop: 'memory'},
+                    {label: '硬盘', prop: 'disk'},
+                    {label: '系统', prop: 'os:'}
                 ]
             }
         },
-        methods:{
-            getTreeData(){
+        methods: {
+            getTreeData() {
                 getBusinessUnitTree()
-                    .then(res=>{
+                    .then(res => {
                         this.treedata = res;
                     }).catch(function (error) {
                     console.log(error)
                 })
             },
             //  获取主机信息
-            getHostData(){
+            getHostData() {
                 getHosts(this.listQuery)
-                    .then(res=>{
+                    .then(res => {
                         this.HostsData = res.results;
                         this.tabletotal = res.count
                     }).catch(function (error) {
@@ -291,14 +302,14 @@
                 })
             },
             sortChange(data) {
-                const { prop, order } = data
+                const {prop, order} = data
                 if (prop === 'wip') {
                     this.sortBywip(order)
-                }else if(prop==='nip'){
+                } else if (prop === 'nip') {
                     this.sortBynip(order)
-                }else if(prop==='ctime'){
+                } else if (prop === 'ctime') {
                     this.sortByctime(order)
-                }else if(prop==='hostname'){
+                } else if (prop === 'hostname') {
                     this.sortByhostname(order)
                 }
             },
@@ -338,12 +349,12 @@
                 this.multipleSelection = val;
             },
             //批量删除主机
-            delAll(){
-                this.$confirm("确定要删除吗？").then(()=>{
-                    this.multipleSelection.forEach(selectedItem=>{
+            delAll() {
+                this.$confirm("确定要删除吗？").then(() => {
+                    this.multipleSelection.forEach(selectedItem => {
                         delHost(selectedItem.id).then(response => {
                             this.$message.success('恭喜你，删除成功',)
-                            this.multipleSelection=[];
+                            this.multipleSelection = [];
                             this.getHostData()
                         }).catch(error => {
                             this.$message.error('删除失败')
@@ -356,9 +367,9 @@
                 })
             },
             //删除主机
-            handleDelete(row){
-                this.$confirm("确定要删除吗？").then(()=>{
-                    delHost(row.id).then((res)=>{
+            handleDelete(row) {
+                this.$confirm("确定要删除吗？").then(() => {
+                    delHost(row.id).then((res) => {
                         this.$message({
                             message: '恭喜你，删除成功',
                             type: 'success'
@@ -370,63 +381,63 @@
                     console.log(error)
                 })
             },
-            handleEdit(row){
-                this.dialog={
-                    title:"编辑主机",
-                    show:true,
-                    option:'edit',
+            handleEdit(row) {
+                this.dialog = {
+                    title: "编辑主机",
+                    show: true,
+                    option: 'edit',
                 },
-                    this.rowdata=row;
-                this.FormData ={
-                    hostname:row.hostname,
-                    wip:row.wip,
-                    nip:row.nip,
-                    status:row.status,
-                    server_type:row.server_type,
-                    sn:row.sn,
-                    instance_id:row.instance_id,
-                    idc:row.idc,
-                    role:row.role,
-                    business_unit:row.business_unit,
-                    desc:row.desc,
-                    cpu_info:row.cpu_info,
-                    memory:row.memory,
-                    disk:row.disk,
-                    os:row.os,
+                    this.rowdata = row;
+                this.FormData = {
+                    hostname: row.hostname,
+                    wip: row.wip,
+                    nip: row.nip,
+                    status: row.status,
+                    server_type: row.server_type,
+                    sn: row.sn,
+                    instance_id: row.instance_id,
+                    idc: row.idc,
+                    role: row.role,
+                    business_unit: row.business_unit,
+                    desc: row.desc,
+                    cpu_info: row.cpu_info,
+                    memory: row.memory,
+                    disk: row.disk,
+                    os: row.os,
                 }
             },
             //添加主机
-            handleAdd(){
-                this.dialog={
-                    title:"添加主机",
-                    show:true,
-                    option:'add',
+            handleAdd() {
+                this.dialog = {
+                    title: "添加主机",
+                    show: true,
+                    option: 'add',
                 };
             },
             // 重置所有搜索
-            refreshClick(){
-                this.listQuery ={
-                    page:1,
-                    page_size :10,
-                    search:'',
-                    status:'',
-                    server_type:'',
-                    ordering:'',
-                    business_unit:'',
+            refreshClick() {
+                this.listQuery = {
+                    page: 1,
+                    page_size: 10,
+                    search: '',
+                    status: '',
+                    server_type: '',
+                    ordering: '',
+                    business_unit: '',
                 };
                 this.getHostData()
             },
             //搜索主机
-            searchClick(){
+            searchClick() {
                 this.listQuery.search = this.searchdata;
                 this.getHostData()
             },
 
-            changeStatus(val){
+            changeStatus(val) {
                 this.listQuery.status = val
                 this.getHostData()
             },
-            changeServerType(val){
+            changeServerType(val) {
                 this.listQuery.server_type = val
                 this.getHostData()
             },
@@ -436,7 +447,7 @@
                 this.getHostData()
             },
             handleSizeChange(val) {
-                this.listQuery.page_size= val  //每页显示多少条
+                this.listQuery.page_size = val  //每页显示多少条
                 this.getHostData()
             },
             handleNodeClick(data) {
@@ -444,19 +455,19 @@
                 // console.log(data.id)
                 this.getHostData()
             },
-            downloadDataTranslate (data) {
+            downloadDataTranslate(data) {
                 return data.map(row => ({
                     ...row,
                     type: row.type ? '禁用' : '正常',
                     used: row.used ? '已使用' : '未使用'
                 }))
             },
-            handleDownloadXlsx(data){
+            handleDownloadXlsx(data) {
                 this.$export.excel({
-                    title:'主机列表',
-                    columns:this.downloadColumns,
-                    data:this.downloadDataTranslate(data)
-                }).then(()=>{
+                    title: '主机列表',
+                    columns: this.downloadColumns,
+                    data: this.downloadDataTranslate(data)
+                }).then(() => {
                     this.$message('导出xlsx成功'
                     )
                 })
@@ -481,34 +492,43 @@
     .handle-box {
         margin-bottom: 20px;
     }
+
     .handle-head {
         padding-bottom: 10px;
     }
+
     .search {
         float: right;
     }
+
     .pagination {
         float: right;
         margin-top: 20px;
     }
+
     .download {
         margin-top: 5px;
         margin-bottom: 5px;
     }
+
     .treeheader {
         padding-bottom: 30px;
     }
+
     .handle-input {
         width: 300px;
         display: inline-block;
     }
+
     .demo-table-expand {
         font-size: 0;
     }
+
     .demo-table-expand label {
         width: 90px;
         color: #99a9bf;
     }
+
     .demo-table-expand .el-form-item {
         margin-right: 0;
         margin-bottom: 0;

@@ -17,22 +17,23 @@
                     <el-col :span="20">
                         <div class="handle-box">
                             <div class="handle-head">
-                                <el-button type="danger"  round @click="delAll" :disabled="this.multipleSelection.length === 0||this.disabled">批量删除</el-button>
-                                <el-button type="success" round  @click="handleAdd">添加主机</el-button>
-                                <el-select v-model="listQuery.status"   @change="changeStatus" placeholder="请选择" class="handle-select mr10">
+                                <el-button size="mini" type="danger"  round @click="delAll" :disabled="this.multipleSelection.length === 0||this.disabled">批量删除</el-button>
+                                <el-button size="mini" type="success" round  @click="handleAdd">添加主机</el-button>
+                                <el-select  size="mini"  v-model="listQuery.status"   @change="changeStatus" placeholder="请选择" class="handle-select mr10">
                                     <el-option label="上线" value="online">
                                     </el-option>
                                     <el-option label="下线" value="offline">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="listQuery.server_type"   @change="changeServerType" placeholder="请选择" class="handle-select mr10">
+                                <el-select  size="mini"   v-model="listQuery.server_type"   @change="changeServerType" placeholder="请选择" class="handle-select mr10">
                                     <el-option label="物理机"  value="physical"></el-option>
                                     <el-option label="虚拟机" value="virtual"></el-option>
                                     <el-option label="云主机" value="instance"></el-option>
                                 </el-select>
                                 <div class="search">
-                                    <el-input v-model="searchdata" placeholder="搜索关键词" class="handle-input mr10"></el-input>
-                                    <el-button type="primary" icon="search" @click="searchClick">搜索</el-button>
+                                    <el-input v-model="searchdata" placeholder="搜索关键词"  size="mini"  class="handle-input mr10"></el-input>
+                                    <el-button size="mini" round  type="primary" icon="search" @click="searchClick">搜索</el-button>
+                                    <el-button size="mini" round   icon="refresh" @click="refreshClick">重置</el-button>
                                 </div>
                             </div>
                             <div class="download">
@@ -402,11 +403,25 @@
                     option:'add',
                 };
             },
+            // 重置所有搜索
+            refreshClick(){
+                this.listQuery ={
+                    page:1,
+                    page_size :10,
+                    search:'',
+                    status:'',
+                    server_type:'',
+                    ordering:'',
+                    business_unit:'',
+                };
+                this.getHostData()
+            },
             //搜索主机
             searchClick(){
                 this.listQuery.search = this.searchdata;
                 this.getHostData()
             },
+
             changeStatus(val){
                 this.listQuery.status = val
                 this.getHostData()
@@ -467,7 +482,7 @@
         margin-bottom: 20px;
     }
     .handle-head {
-        padding-bottom: 30px;
+        padding-bottom: 10px;
     }
     .search {
         float: right;
@@ -477,8 +492,8 @@
         margin-top: 20px;
     }
     .download {
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
     .treeheader {
         padding-bottom: 30px;

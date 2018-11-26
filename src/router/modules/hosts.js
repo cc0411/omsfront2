@@ -16,7 +16,7 @@ export default {
             meta: {meta, title: '服务器'}
         },
         {path: 'idcs', name: `${pre}idcs`, component: () => import('@/pages/hosts/Idcs'), meta: {meta, title: '机房'}},
-        {path: 'roles', name: `${pre}roles`, component: () => import('@/pages/hosts/Roles'), meta: {meta, title: '角色'}},
+        {path: 'groups', name: `${pre}groups`, component: () => import('@/pages/hosts/Groups'), meta: {meta, title: '主机组'}},
         {
             path: 'units',
             name: `${pre}units`,

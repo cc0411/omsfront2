@@ -56,18 +56,15 @@
                             <el-option v-for="item in IdcData" :key="item.name" :value="item.name"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="角色" prop="role">
-                        <el-select v-model="FormData.role" multiple placeholder="请选择">
-                            <el-option v-for="item in RoleData" :key="item.name" :value="item.name"></el-option>
+                    <el-form-item label="主机组" prop="group">
+                        <el-select v-model="FormData.group" multiple placeholder="请选择主机组">
+                            <el-option v-for="item in GroupData" :key="item.name" :value="item.name"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="业务线" prop="business_unit">
-                        <treeselect
-                                :options="BusinessUnitData"
-                                v-model="FormData.business_unit"
-                                :normalizer="normalizer"
-                                placeholder="请选择业务线"
-                        />
+                        <el-select v-model="FormData.business_unit" placeholder="请选择业务线">
+                            <el-option v-for="item in BusinessUnitData" :key="item.name" :value="item.name"></el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="主机描述" prop="desc">
                         <el-input type="textarea" rows="5" v-model="FormData.desc"></el-input>
@@ -87,35 +84,24 @@
 </template>
 
 <script>
-    import Treeselect from '@riophae/vue-treeselect'
-    // import the styles
-    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
     import {addHost, updateHost} from '@/api/sys/hosts'
-    import {getIdcs, getBusinessUnits, getRoles, getBusinessUnitTree} from '@/api/sys/hosts'
+    import {getIdcs, getBusinessUnits, getGroup} from '@/api/sys/hosts'
 
     export default {
         name: 'Hostdialog',
-        components: {Treeselect},
         props: {
             dialog: Object,
             FormData: Object,
             rowdata: Object,
         },
         created() {
-            this.getRoleData();
+            this.getGroupData();
             this.getBusinessUnitsData();
             this.getIdcData();
         },
         data() {
             return {
-                normalizer(node) {
-                    return {
-                        id: node.name,
-                        label: node.name,
-                        children: node.parent_level,
-                    }
-                },
-                RoleData: {},
+                GroupData: {},
                 IdcData: {},
                 BusinessUnitData: {},
                 ASSET_STATUS: [
@@ -139,6 +125,7 @@
             }
         },
         methods: {
+            //编辑和添加功能具体实现
             onSubmit(Formname) {
                 var that = this
                 this.$refs[Formname].validate((valid) => {
@@ -172,10 +159,10 @@
                     }
                 })
             },
-            getRoleData() {
-                getRoles()
+            getGroupData() {
+                getGroup()
                     .then(res => {
-                        this.RoleData = res;
+                        this.GroupData = res;
                     }).catch(function (error) {
                     console.log(error)
                 })
@@ -188,8 +175,9 @@
                     console.log(error)
                 })
             },
+
             getBusinessUnitsData() {
-                getBusinessUnits()
+                getBusinessUnits({})
                     .then(res => {
                         this.BusinessUnitData = res;
                     }).catch(function (error) {

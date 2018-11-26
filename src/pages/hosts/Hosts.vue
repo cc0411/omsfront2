@@ -8,11 +8,30 @@
                         <div class="treeheader">
                             <h3>业务线树</h3>
                         </div>
-                        <el-tree :data="treedata"
-                                 :props="defaultProps"
-                                 accordion
-                                 @node-click="handleNodeClick">
-                        </el-tree>
+                        <div class="treenav">
+                            <el-menu
+                                    backgroud-color="write"
+                                    text-color = "black"
+                                    active-text-color="#ffd04b"
+                                    unique-opened
+                            >
+                             <el-submenu v-for="item,index in treedata"
+                                         :index="String(index)"
+                                         >
+                                    <template slot="title" >
+                                        <span  @click="handleSelectUnit(item.id)">{{item.name}}</span>
+                                    </template>
+                                 <el-menu-item-group>
+                                     <el-menu-item v-for="gname,index in item.group"
+                                                   :index="String(index)"
+                                                   @click="handleSelectGroup(gname.id)"
+                                     >
+                                         {{gname.name}}
+                                     </el-menu-item>
+                                 </el-menu-item-group>
+                             </el-submenu>
+                            </el-menu>
+                        </div>
                     </el-col>
                     <el-col :span="20">
                         <div class="handle-box">
@@ -92,8 +111,8 @@
                                             <el-form-item label="SN">
                                                 <span>{{props.row.sn}}</span>
                                             </el-form-item>
-                                            <el-form-item label="角色">
-                                                <span>{{props.row.role}}</span>
+                                            <el-form-item label="主机组">
+                                                <span v-for="g in props.row.group">{{g}}</span>
                                             </el-form-item>
                                             <el-form-item label="业务线">
                                                 <span>{{props.row.business_unit}}</span>
@@ -198,7 +217,7 @@
 </template>
 
 <script>
-    import {getBusinessUnitTree} from '@/api/sys/hosts'
+    import {getBusinessUnits} from '@/api/sys/hosts'
     import Hostdialog from './Hostdialog'
     import {getHosts, delHost} from '@/api/sys/hosts'
 
@@ -214,10 +233,7 @@
         data() {
             return {
                 treedata: [],
-                defaultProps: {
-                    children: 'parent_level',
-                    label: 'name'
-                },
+                //添加主机格式化form字段
                 FormData: {
                     hostname: '',
                     wip: '',
@@ -235,17 +251,24 @@
                     disk: 0,
                     os: '',
                 },
+                //弹出框选择
                 dialog: {
                     show: false,
                     title: '',
                     option: 'edit',
                 },
+                //要编辑的字段id传递通过scope.row  定义rowdata
                 rowdata: {},
+
                 searchdata: '',
+                //定义如果没有选中则批量删除和下载显示不可用
                 disabled: false,
+                //主机相关条数和数据
                 tabletotal: 0,
                 HostsData: [],
+                //多选框
                 multipleSelection: [],
+                //过滤的所有条件
                 listQuery: {
                     page: 1,
                     page_size: 10,
@@ -253,7 +276,6 @@
                     status: '',
                     server_type: '',
                     ordering: '',
-                    business_unit: '',
                 },
                 ASSET_TYPE: {
                     'physical': {'type': '物理机', 'color': '#c0dbff'},
@@ -264,6 +286,7 @@
                     'online': {'status': '上线', 'type': 'primary'},
                     'offline': {'status': '下线', 'type': 'info'},
                 },
+                //要导出的格式化字段
                 downloadColumns: [
                     {label: '主机名', prop: 'hostname'},
                     {label: '外网地址', prop: 'wip'},
@@ -283,8 +306,9 @@
             }
         },
         methods: {
+            //获取树结构
             getTreeData() {
-                getBusinessUnitTree()
+                getBusinessUnits()
                     .then(res => {
                         this.treedata = res;
                     }).catch(function (error) {
@@ -301,6 +325,8 @@
                     console.log(error)
                 })
             },
+
+            //排序
             sortChange(data) {
                 const {prop, order} = data
                 if (prop === 'wip') {
@@ -345,9 +371,15 @@
                 }
                 this.getHostData()
             },
+
+
+            //多选框选中
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
+
+
+
             //批量删除主机
             delAll() {
                 this.$confirm("确定要删除吗？").then(() => {
@@ -366,6 +398,8 @@
                     console.log(error)
                 })
             },
+
+
             //删除主机
             handleDelete(row) {
                 this.$confirm("确定要删除吗？").then(() => {
@@ -381,6 +415,8 @@
                     console.log(error)
                 })
             },
+
+            //编辑主机
             handleEdit(row) {
                 this.dialog = {
                     title: "编辑主机",
@@ -406,6 +442,8 @@
                     os: row.os,
                 }
             },
+
+
             //添加主机
             handleAdd() {
                 this.dialog = {
@@ -414,7 +452,9 @@
                     option: 'add',
                 };
             },
-            // 重置所有搜索
+
+
+            // 重置所有过滤条件
             refreshClick() {
                 this.listQuery = {
                     page: 1,
@@ -427,20 +467,36 @@
                 };
                 this.getHostData()
             },
+
+
+
             //搜索主机
             searchClick() {
                 this.listQuery.search = this.searchdata;
                 this.getHostData()
             },
 
+            //业务线展示主机过滤
+            handleSelectUnit(value){
+              console.log(value)
+            },
+            handleSelectGroup(value){
+                console.log(value)
+
+            },
+
+            //按状态过滤主机
             changeStatus(val) {
                 this.listQuery.status = val
                 this.getHostData()
             },
+            //按服务器类型过滤主机
             changeServerType(val) {
                 this.listQuery.server_type = val
                 this.getHostData()
             },
+
+            //分页
             handleCurrentChange(val) {
                 // this.currentPage =val  //点击多少页
                 this.listQuery.page = val
@@ -450,11 +506,9 @@
                 this.listQuery.page_size = val  //每页显示多少条
                 this.getHostData()
             },
-            handleNodeClick(data) {
-                this.listQuery.business_unit = data.id;
-                // console.log(data.id)
-                this.getHostData()
-            },
+
+
+            //导出xlsx和csv
             downloadDataTranslate(data) {
                 return data.map(row => ({
                     ...row,
@@ -472,7 +526,6 @@
                     )
                 })
             },
-
             handleDownloadCsv(data) {
                 this.$export.csv({
                     title: '主机列表',

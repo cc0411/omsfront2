@@ -59,27 +59,27 @@ export function deleteIdc(id) {
 }
 
 
-export function addRole(data) {
+export function addgroup(data) {
     return axios({
-        url: `${host}/api/role/`,
+        url: `${host}/api/group/`,
         method: 'post',
         data
     })
 }
 //获取角色信息
-export const getRoles = () => { return axios.get(`${host}/api/role/`) }
+export const getGroup = () => { return axios.get(`${host}/api/group/`) }
 
-export function updateRole(id, data) {
+export function updateGroup(id, data) {
     return axios({
-        url: `${host}/api/role/` + id + '/',
+        url: `${host}/api/group/` + id + '/',
         method: 'patch',
         data
     })
 }
 
-export function deleteRole(id) {
+export function deleteGroup(id) {
     return axios({
-        url: `${host}/api/role/` + id + '/',
+        url: `${host}/api/group/` + id + '/',
         method: 'delete'
     })
 }
@@ -94,9 +94,6 @@ export function addBusinessUnit(data) {
 }
 //获取业务线信息
 export const getBusinessUnits = (params) => {return axios.get(`${host}/api/businessunit/`) }
-
-//获取业务线树
-export const getBusinessUnitTree = () => { return axios.get(`${host}/api/treeassets/`) }
 
 
 export function updateBusinessUnit(id, data) {

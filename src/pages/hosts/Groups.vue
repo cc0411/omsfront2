@@ -3,7 +3,7 @@
         <div class="d2-mt d2-mr">
             <el-card class="d2-card d2-mb">
                 <div class="handle-box">
-                    <el-button type="success" round @click="handleAdd">添加角色</el-button>
+                    <el-button type="success" round @click="handleAdd">添加主机组</el-button>
                     <el-table
                             :data='TableData'
                             v-if="TableData.length>0"
@@ -12,7 +12,7 @@
                     >
                         <el-table-column
                                 prop="name"
-                                label="角色名"
+                                label="主机组名"
                                 width="200">
                         </el-table-column>
                         <el-table-column prop='ctime' label='创建时间' width="200">
@@ -24,7 +24,7 @@
                         </el-table-column>
                         <el-table-column
                                 prop="desc"
-                                label="角色描述"
+                                label="主机组描述"
                                 width="300">
                         </el-table-column>
                         <el-table-column label="操作" width="180" aligin="center">
@@ -37,27 +37,27 @@
                         </el-table-column>
                     </el-table>
                 </div>
-                <Roledialog :dialog="dialog"
+                <Groupdialog :dialog="dialog"
                             :rowdata="rowdata"
                             :FormData="FormData"
-                            @updateroles="getRoleData">
-                </Roledialog>
+                            @updategroup="getGroupData">
+                </Groupdialog>
             </el-card>
         </div>
     </d2-container>
 </template>
 
 <script>
-    import Roledialog from './Roledialog'
-    import {getRoles, deleteRole} from '@/api/sys/hosts'
+    import Groupdialog from './Groupdialog'
+    import {getGroup, deleteGroup} from '@/api/sys/hosts'
 
     export default {
-        name: "Roles",
+        name: "Groups",
         created() {
-            this.getRoleData();
+            this.getGroupData();
         },
         components: {
-            Roledialog,
+            Groupdialog,
         },
         data() {
             return {
@@ -75,20 +75,19 @@
             }
         },
         methods: {
-            //  获取角色信息
-            getRoleData() {
-                getRoles()
+            //  获取主机组信息
+            getGroupData() {
+                getGroup()
                     .then(res => {
-                        console.log(res)
                         this.TableData = res;
                     }).catch(function (error) {
                     console.log(error)
                 })
             },
-            //删除角色
+            //删除主机组
             handleDelete(row) {
                 this.$confirm("确定要删除吗？").then(() => {
-                    deleteRole(row.id).then((res) => {
+                    deleteGroup(row.id).then((res) => {
                         this.$message({
                             message: '恭喜你，删除成功',
                             type: 'success'
@@ -100,10 +99,10 @@
                     console.log(error)
                 })
             },
-            //编辑角色
+            //编辑主机组
             handleEdit(row) {
                 this.dialog = {
-                    title: "编辑角色",
+                    title: "编辑主机组",
                     show: true,
                     option: 'edit',
                 },
@@ -113,10 +112,10 @@
                     desc: row.desc
                 }
             },
-            //添加角色
+            //添加主机组
             handleAdd() {
                 this.dialog = {
-                    title: "添加角色",
+                    title: "添加主机组",
                     show: true,
                     option: 'add',
                 };

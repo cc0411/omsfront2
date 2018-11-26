@@ -10,33 +10,17 @@
                             tooltip-effect="dark"
                             style="width: 100%"
                     >
-                        <el-table-column prop='businessunit_type' label='类目' width="150" aligin="center">
-                            <template slot-scope="scope">
-                                <div slot="reference" class="name-wrapper" style="text-align: left">
-                                    <el-tag style="color: #000"
-                                            :color="BusinessUnit_TYPE[scope.row.businessunit_type].color">
-                                        {{BusinessUnit_TYPE[scope.row.businessunit_type].type}}
-                                    </el-tag>
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="parent_unit"
-                                label="父业务线名"
-                                width="200">
-                        </el-table-column>
-
                         <el-table-column
                                 prop="name"
                                 label="业务线名"
                                 width="200">
                         </el-table-column>
                         <el-table-column
-                                prop="parent_level"
-                                label="二级业务线名"
+                                prop="group"
+                                label="主机组"
                                 width="200">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.parent_level.length>0" v-for="item in  scope.row.parent_level">{{item.name}}</span>
+                                <span v-for="gname in scope.row.group">{{gname.name}}<br></span>
                             </template>
                         </el-table-column>
                         <el-table-column prop='ctime' label='创建时间' width="200">
@@ -64,7 +48,6 @@
                 <BusinessUnitdialog :dialog="dialog"
                                     :rowdata="rowdata"
                                     :FormData="FormData"
-                                    :TableData="TableData"
                                     @updatebusinessunits="getBusinessUnitsData">
 
                 </BusinessUnitdialog>
@@ -82,11 +65,6 @@
         name: 'BusinessUnit',
         data() {
             return {
-                BusinessUnit_TYPE: {
-                    1: {'type': '一级业务线', 'color': '#c0dbff'},
-                    2: {'type': '二级业务线', 'color': '#19ddff'},
-                    3: {'type': '三级业务线', 'color': '#f06292'},
-                },
                 TableData: [],
                 dialog: {
                     show: false,
@@ -95,8 +73,7 @@
                 },
                 rowdata: {},
                 FormData: {
-                    parent_unit: '',
-                    businessunit_type: '',
+                    group: '',
                     name: '',
                     desc: '',
                 },
@@ -111,7 +88,7 @@
         methods: {
             //  获取机房信息
             getBusinessUnitsData() {
-                getBusinessUnits()
+                getBusinessUnits({})
                     .then(res => {
                         console.log(res)
                         this.TableData = res;
@@ -144,9 +121,8 @@
                     this.rowdata = row;
                 this.FormData = {
                     name: row.name,
-                    parent_unit: row.parent_unit,
                     desc: row.desc,
-                    businessunit_type: row.businessunit_type
+                    group: row.group
                 }
             },
             //添加业务线

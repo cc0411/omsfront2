@@ -10,18 +10,19 @@
                             tooltip-effect="dark"
                             style="width: 100%"
                     >
+                        <el-table-column type="expand">
+                            <template slot-scope="props">
+                                <el-form label-posotion="left" inline class="demo-table-expand">
+                                    <el-form-item label="主机组:">
+                                        <span v-for="g in props.row.group">{{g}}&nbsp;&nbsp;</span>
+                                    </el-form-item>
+                                </el-form>
+                            </template>
+                        </el-table-column>
                         <el-table-column
                                 prop="name"
                                 label="业务线名"
                                 width="200">
-                        </el-table-column>
-                        <el-table-column
-                                prop="group"
-                                label="主机组"
-                                width="200">
-                            <template slot-scope="scope">
-                                <span v-for="gname in scope.row.group">{{gname.name}}<br></span>
-                            </template>
                         </el-table-column>
                         <el-table-column prop='ctime' label='创建时间' width="200">
                             <template slot-scope="scope">

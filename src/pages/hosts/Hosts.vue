@@ -9,28 +9,13 @@
                             <h3>业务线树</h3>
                         </div>
                         <div class="treenav">
-                            <el-menu
-                                    backgroud-color="write"
-                                    text-color = "black"
-                                    active-text-color="#ffd04b"
-                                    unique-opened
-                            >
-                             <el-submenu v-for="item,index in treedata"
-                                         :index="String(index)"
-                                         >
-                                    <template slot="title" >
-                                        <span  @click="handleSelectUnit(item.id)">{{item.name}}</span>
-                                    </template>
-                                 <el-menu-item-group>
-                                     <el-menu-item v-for="gname,index in item.group"
-                                                   :index="String(index)"
-                                                   @click="handleSelectGroup(gname.id)"
-                                     >
-                                         {{gname.name}}
-                                     </el-menu-item>
-                                 </el-menu-item-group>
-                             </el-submenu>
-                            </el-menu>
+                            <el-tree
+                                    node-key="id"
+                                    :data="treedata"
+                                    :props="defaultProps"
+                                    accordion
+                                    @node-click="handleNodeClick">
+                            </el-tree>
                         </div>
                     </el-col>
                     <el-col :span="20">
@@ -112,7 +97,7 @@
                                                 <span>{{props.row.sn}}</span>
                                             </el-form-item>
                                             <el-form-item label="主机组">
-                                                <span v-for="g in props.row.group">{{g}}</span>
+                                                <span v-for="g in props.row.group">{{g}}&nbsp;&nbsp;</span>
                                             </el-form-item>
                                             <el-form-item label="业务线">
                                                 <span>{{props.row.business_unit}}</span>
@@ -217,7 +202,7 @@
 </template>
 
 <script>
-    import {getBusinessUnits} from '@/api/sys/hosts'
+    import {getBusinessUnits,getTreeUnits} from '@/api/sys/hosts'
     import Hostdialog from './Hostdialog'
     import {getHosts, delHost} from '@/api/sys/hosts'
 
@@ -233,6 +218,11 @@
         data() {
             return {
                 treedata: [],
+                defaultProps:{
+                    id:'id',
+                    label:'name',
+                    children:'group'
+                },
                 //添加主机格式化form字段
                 FormData: {
                     hostname: '',
@@ -243,7 +233,7 @@
                     sn: '',
                     instance_id: '',
                     idc: '',
-                    role: '',
+                    group: '',
                     business_unit: '',
                     desc: '',
                     cpu_info: '',
@@ -264,6 +254,8 @@
                 //定义如果没有选中则批量删除和下载显示不可用
                 disabled: false,
                 //主机相关条数和数据
+
+                group:null,
                 tabletotal: 0,
                 HostsData: [],
                 //多选框
@@ -276,6 +268,7 @@
                     status: '',
                     server_type: '',
                     ordering: '',
+                    business_unit:'',
                 },
                 ASSET_TYPE: {
                     'physical': {'type': '物理机', 'color': '#c0dbff'},
@@ -308,7 +301,7 @@
         methods: {
             //获取树结构
             getTreeData() {
-                getBusinessUnits()
+                getTreeUnits()
                     .then(res => {
                         this.treedata = res;
                     }).catch(function (error) {
@@ -317,13 +310,32 @@
             },
             //  获取主机信息
             getHostData() {
-                getHosts(this.listQuery)
+                if(this.group!=null){
+                    getHosts({group:this.group,
+                        page:this.listQuery.page,
+                        page_size: this.listQuery.page_size,
+                        search: this.listQuery.search,
+                        status: this.listQuery.status,
+                        server_type: this.listQuery.server_type,
+                        ordering: this.listQuery.ordering,
+                        business_unit:this.listQuery.business_unit,}).then(
+                        (response)=>{
+                            this.HostsData = response.results
+                            this.tabletotal = response.count
+                        }
+                    ).catch(function (error) {
+                        console.log(error)
+                    });
+                }
+                else { getHosts(this.listQuery)
                     .then(res => {
                         this.HostsData = res.results;
                         this.tabletotal = res.count
                     }).catch(function (error) {
-                    console.log(error)
-                })
+                        console.log(error)
+                    })
+                }
+
             },
 
             //排序
@@ -433,7 +445,7 @@
                     sn: row.sn,
                     instance_id: row.instance_id,
                     idc: row.idc,
-                    role: row.role,
+                    group: row.group,
                     business_unit: row.business_unit,
                     desc: row.desc,
                     cpu_info: row.cpu_info,
@@ -477,14 +489,21 @@
             },
 
             //业务线展示主机过滤
-            handleSelectUnit(value){
-              console.log(value)
+            handleSelectUnit(val){
+              console.log(val)
+                this.listQuery.business_unit = val
+                this.group = null
+                this.getHostData()
             },
             handleSelectGroup(value){
                 console.log(value)
+                this.group = value
+                this.getHostData()
 
             },
-
+            handleNodeClick(data){
+                console.log(data)
+                },
             //按状态过滤主机
             changeStatus(val) {
                 this.listQuery.status = val

@@ -32,7 +32,6 @@ export function getHosts(params) {
 }
 
 
-
 export function addIdc(data) {
     return axios({
         url: `${host}/api/idc/`,
@@ -59,7 +58,7 @@ export function deleteIdc(id) {
 }
 
 
-export function addgroup(data) {
+export function addGroup(data) {
     return axios({
         url: `${host}/api/group/`,
         method: 'post',
@@ -95,7 +94,7 @@ export function addBusinessUnit(data) {
 //获取业务线信息
 export const getBusinessUnits = (params) => {return axios.get(`${host}/api/businessunit/`) }
 
-
+export const getTreeUnits = (params) =>{return axios.get(`${host}/api/tree/`)}
 export function updateBusinessUnit(id, data) {
     return axios({
         url: `${host}/api/businessunit/` + id + '/',

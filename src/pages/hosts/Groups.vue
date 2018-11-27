@@ -92,7 +92,7 @@
                             message: '恭喜你，删除成功',
                             type: 'success'
                         })
-                        this.getRoleData()
+                        this.getGroupData()
                     })
                 }).catch(error => {
                     this.$message.info('点错了')

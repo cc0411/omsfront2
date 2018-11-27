@@ -13,7 +13,7 @@
                         <el-input v-model="FormData.name"></el-input>
                     </el-form-item>
                     <el-form-item label="主机组" prop="group">
-                        <el-select v-model="FormData.group" multiple placeholder="请选择">
+                        <el-select v-model="FormData.group" multiple placeholder="请选择主机组">
                             <el-option v-for="item in GroupData" :key="item.name" :value="item.name"></el-option>
                         </el-select>
                     </el-form-item>

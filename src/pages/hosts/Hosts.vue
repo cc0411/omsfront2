@@ -10,7 +10,7 @@
                         </div>
                         <div class="treenav">
                             <el-tree
-                                    node-key="id"
+                                    current-node-key
                                     :data="treedata"
                                     :props="defaultProps"
                                     accordion
@@ -489,21 +489,17 @@
             },
 
             //业务线展示主机过滤
-            handleSelectUnit(val){
-              console.log(val)
-                this.listQuery.business_unit = val
-                this.group = null
-                this.getHostData()
-            },
-            handleSelectGroup(value){
-                console.log(value)
-                this.group = value
-                this.getHostData()
-
-            },
             handleNodeClick(data){
-                console.log(data)
+                if(data.group){
+                    this.listQuery.business_unit =data.id
+                    this.group =null
+                }
+                else{
+                    this.group = data.id
+                }
+                this.getHostData()
                 },
+
             //按状态过滤主机
             changeStatus(val) {
                 this.listQuery.status = val

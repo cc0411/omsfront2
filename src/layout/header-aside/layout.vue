@@ -70,6 +70,9 @@
                                     </keep-alive>
                                 </transition>
                             </div>
+                            <div class="d2-theme-container-main-footer" flex-box="0">
+                                <d2-footer/>
+                            </div>
                         </div>
                     </transition>
                 </div>
@@ -95,6 +98,7 @@
             'd2-tabs': () => import('./components/tabs'),
             'd2-header-theme': () => import('./components/header-theme'),
             'd2-header-user': () => import('./components/header-user'),
+        'd2-footer': () => import('./components/footer'),
         },
         data() {
             return {

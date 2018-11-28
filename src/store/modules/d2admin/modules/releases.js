@@ -13,10 +13,8 @@ export default {
      * @param {Object} state vuex state
      */
     versionShow (state) {
-      util.log.capsule('D2Admin', `v${state.version}`)
-      console.log('Github https://github.com/d2-projects/d2-admin')
-      console.log('Doc    https://doc.d2admin.fairyever.com/zh/')
-      console.log('请不要吝啬您的 star，谢谢 ~')
+      util.log.capsule('OMS', `v${state.version}`)
+      console.log('xxxx')
     }
   }
 }

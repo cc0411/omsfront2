@@ -120,11 +120,13 @@
                                 </el-table-column>
                                 <el-table-column
                                         prop="wip"
+                                        fixed
                                         label="外网地址"
                                         sortable="custom"
                                         width="120">
                                 </el-table-column>
                                 <el-table-column
+
                                         prop="nip"
                                         label="内网地址"
                                         sortable="custom"
@@ -597,7 +599,7 @@
         color: #99a9bf;
     }
 
-    .demo-table-expand .el-form-item {
+    .demo-table-expand .el-form-item{
         margin-right: 0;
         margin-bottom: 0;
         width: 50%;

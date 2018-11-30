@@ -1,5 +1,5 @@
 import hosts from './modules/hosts'
-
+import salt from './modules/salt'
 import layoutHeaderAside from '@/layout/header-aside'
 
 const meta = { requiresAuth: true }
@@ -46,7 +46,8 @@ const frameIn = [
       }
     ]
   },
-  hosts
+  hosts,
+  salt
 ]
 
 /**

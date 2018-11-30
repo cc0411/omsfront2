@@ -10,5 +10,14 @@ export default [
             {path: '/hosts/units', title: '业务线', icon: 'tags'},
             {path: '/hosts/assets', title: '服务器', icon: 'server'},
         ]
-    }
+    },
+    {
+        title: 'salt',
+        icon: 'cube',
+        children: [
+            {path: '/salt/minions', title: 'Minion信息', icon: 'exclamation-circle'},
+            {path: '/salt/keys', title: 'SaltKey信息', icon: 'exclamation-circle'},
+
+        ]
+    },
 ]

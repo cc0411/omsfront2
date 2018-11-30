@@ -44,16 +44,6 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 在请求发送之前做一些处理
-
-    // if (!(/^https:\/\/|http:\/\//.test(config.url))) {
-    //   const token = util.cookies.get('token')
-    //     console.log(11111)
-    //     console.log(token)
-    //   if (token && token !== 'undefined') {
-    //     // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-    //       config.headers['Authorization'] = `JWT ${token}`;
-    //   }
-    // }
     if(util.cookies.get('token')){
         config.headers['Authorization'] = `JWT ${util.cookies.get('token')}`;
     }

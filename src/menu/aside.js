@@ -17,6 +17,7 @@ export default [
         children: [
             {path: '/salt/minions', title: 'Minion信息', icon: 'exclamation-circle'},
             {path: '/salt/keys', title: 'SaltKey信息', icon: 'exclamation-circle'},
+            {path: '/salt/cmd', title: '命令执行', icon: 'exclamation-circle'},
 
         ]
     },

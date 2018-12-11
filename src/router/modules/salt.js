@@ -21,6 +21,12 @@ export default {
             component: () => import('@/pages/salt/SaltKey'),
             meta: {meta, title: 'SaltKey信息'}
         },
+        {
+            path: 'cmd',
+            name: `${pre}cmd`,
+            component: () => import('@/pages/salt/SaltCmd'),
+            meta: {meta, title: '命令执行'}
+        },
 
     ])('salt-')
 }

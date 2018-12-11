@@ -291,7 +291,7 @@
                     {label: 'SN', prop: 'sn'},
                     {label: '云主机ID', prop: 'instance_id'},
                     {label: '机房', prop: 'idc'},
-                    {label: '角色', prop: 'role'},
+                    {label: '主机组', prop: 'group'},
                     {label: '业务线', prop: 'business_unit'},
                     {label: 'CPU', prop: 'cpu_info'},
                     {label: '内存', prop: 'memory'},
